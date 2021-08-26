@@ -101,3 +101,168 @@ plot(hp~mpg) + abline(lm, col='red')
 ```
 
 # Examples of Spatial Operations
+
+<!-- ## We are going to be looking at cafes in Isla Vista area -->
+
+<!-- ```{r echo=F, results='hide'} -->
+
+<!-- library(sf) -->
+
+<!-- cafe = st_read("https://raw.githubusercontent.com/barguzin/spatial_analysis/master/cafe.geojson") -->
+
+<!-- cafe = cafe[c(9,10,11,12,13),] -->
+<!-- plot(st_geometry(cafe), col='red', cex=2) -->
+
+<!-- ``` -->
+
+## North Carolina Data 
+
+```{r echo=F, results='hide'}
+
+library(sf)
+
+nc <- st_read(system.file("shape/nc.shp", package="sf"))
+
+plot(st_geometry(nc), axes=T)
+
+```
+
+## Reproject 
+
+```{r echo=F, results='hide'}
+
+x = st_transform(nc, 32119)
+
+plot(st_geometry(x), axes=T)
+
+```
+
+## Calculate distance 
+
+```{r echo=F, results='hide'}
+
+#plot(st_geometry(nc))
+plot(st_geometry(x[c(1,4,22),]), axes=T, col='red')
+plot(st_geometry(x[c(1, 33,55,56),]), axes=T, col='blue', add=T)
+
+```
+
+## Distance Matrix
+
+```{r echo=F}
+
+dist = st_distance(x[c(1,4,22),], x[c(1, 33,55,56),])
+dist
+
+```
+
+
+## Overlay 
+
+<a href="https://imgur.com/WlfTNZV"><img src="https://desktop.arcgis.com/en/arcmap/10.3/analyze/commonly-used-tools/GUID-5E9A4D2C-85BF-49A6-88E3-74D1B5EE0DB1-web.png" title="source: imgur.com" style="width:50%" /></a>
+
+
+## Overlay Analysis 
+
+```{r echo=F}
+
+plot(st_geometry(x[c(1,2,20,21),]), axes=T, col=rgb(1,0,0, 0.5))
+plot(st_geometry(x[c(1,2,10,11),]), axes=T, col=rgb(0,0,1, 0.5), add=T)
+#plot(st_geometry(x[c(1,2,10,11),]), axes=T, col='blue')
+
+```
+
+
+## Overlaying in NC 
+
+```{r echo=F}
+
+st_intersects(nc[c(1,2,20,21),], nc[c(1,2,10,11),], sparse = FALSE)
+
+```
+
+
+## Choropleth Map of County Areas 
+
+```{r echo=F}
+
+plot(nc["AREA"])
+
+```
+
+
+## Choropleth Map of Births in North Carolina 
+
+```{r echo=F}
+
+plot(nc["BIR74"])
+
+```
+
+
+## More beautiful and custom maps 
+
+```{r echo=F, message=F}
+
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+ggplot() + 
+  geom_sf(data = nc, aes(fill = BIR74)) + 
+  scale_y_continuous(breaks = 34:36) + 
+  scale_fill_continuous(type='viridis') + 
+  theme_minimal()
+
+```
+
+
+## Centroids
+
+```{r echo=F, message=F}
+
+# using sf
+sf_cent <- st_centroid(nc)
+
+# plot both together to confirm that they are equivalent
+ggplot() + 
+  geom_sf(data = nc, fill = 'white') +
+  geom_sf(data = sf_cent, color = 'red') + 
+  theme_minimal()
+
+```
+
+
+## Centroids + Proportional Symbols
+
+```{r echo=F, message=F}
+
+nc$lng = st_coordinates(st_centroid(nc))[,1]
+nc$lat = st_coordinates(st_centroid(nc))[,2]
+
+# plot both together to confirm that they are equivalent
+ggplot(nc) + 
+  geom_sf(data = nc, fill = 'white') +
+  #stat_sf_coordinates(aes(size='BIR74')) + 
+  geom_point(aes(x=lng, y=lat, size=BIR74)) + 
+  theme_minimal()
+
+```
+
+
+## Centroids + Proportional Symbols (Size) + Hue
+
+```{r echo=F, message=F}
+
+#nc$lng = st_coordinates(st_centroid(nc))[,1]
+#nc$lat = st_coordinates(st_centroid(nc))[,2]
+
+# plot both together to confirm that they are equivalent
+ggplot(nc) + 
+  geom_sf(data = nc, fill = 'white') +
+  #stat_sf_coordinates(aes(size='BIR74')) + 
+  geom_point(aes(x=lng, y=lat, size=BIR74, color=BIR74)) + 
+  scale_color_continuous(type='viridis') +
+  theme_minimal()
+
+```

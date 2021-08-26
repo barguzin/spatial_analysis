@@ -1,0 +1,620 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-ide",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2021-08-26T03:19:46Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "relation/8325250",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "905",
+        "addr:postcode": "93117",
+        "addr:street": "Embarcadero del Norte",
+        "amenity": "cafe",
+        "building": "yes",
+        "building:levels": "1",
+        "cuisine": "coffee_shop;ice_cream;coffee;tea;frozen_yogurt",
+        "localwiki": "https://localwiki.org/islavista/IV_Drip",
+        "name": "I. V. Drip",
+        "opening_hours": "07:00-00:00",
+        "phone": "+1-805-968-4550",
+        "type": "multipolygon",
+        "website": "https://www.facebook.com/pages/iv-drip/38531669652"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.8555073,
+              34.4129061
+            ],
+            [
+              -119.8557108,
+              34.4129057
+            ],
+            [
+              -119.8557108,
+              34.412871
+            ],
+            [
+              -119.8555073,
+              34.4128706
+            ],
+            [
+              -119.8555073,
+              34.4129061
+            ]
+          ]
+        ]
+      },
+      "id": "relation/8325250"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/221259487",
+        "amenity": "cafe",
+        "building": "university",
+        "name": "Coral Tree Cafe",
+        "ref": "532"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.8466912,
+              34.415843
+            ],
+            [
+              -119.8466132,
+              34.4158431
+            ],
+            [
+              -119.8466132,
+              34.4158486
+            ],
+            [
+              -119.8466132,
+              34.4158753
+            ],
+            [
+              -119.8468632,
+              34.4158753
+            ],
+            [
+              -119.8468632,
+              34.4158146
+            ],
+            [
+              -119.8468502,
+              34.4158146
+            ],
+            [
+              -119.8468502,
+              34.4157495
+            ],
+            [
+              -119.8468242,
+              34.4157495
+            ],
+            [
+              -119.8468242,
+              34.4157564
+            ],
+            [
+              -119.8467842,
+              34.4157564
+            ],
+            [
+              -119.8467842,
+              34.4157495
+            ],
+            [
+              -119.8467582,
+              34.4157495
+            ],
+            [
+              -119.8467582,
+              34.4157564
+            ],
+            [
+              -119.8467182,
+              34.4157564
+            ],
+            [
+              -119.8467182,
+              34.4157495
+            ],
+            [
+              -119.8467032,
+              34.4157495
+            ],
+            [
+              -119.8466912,
+              34.4157495
+            ],
+            [
+              -119.8466912,
+              34.415843
+            ]
+          ]
+        ]
+      },
+      "id": "way/221259487"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/558220103",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "888",
+        "addr:postcode": "93117",
+        "addr:street": "Embarcadero del Norte",
+        "amenity": "cafe",
+        "brand": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:wikipedia": "en:Starbucks",
+        "building": "yes",
+        "building:levels": "1",
+        "cuisine": "coffee_shop",
+        "height": "2.8",
+        "internet_access": "yes",
+        "localwiki": "https://localwiki.org/islavista/Starbucks_Coffee",
+        "name": "Starbucks",
+        "official_name": "Starbucks Coffee",
+        "opening_hours": "Mo-Sa 06:00-18:00; Su 06:30-18:00",
+        "phone": "+1-805-968-1192",
+        "roof:colour": "#DB5434",
+        "roof:shape": "flat",
+        "takeaway": "yes",
+        "website": "https://www.starbucks.com/"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.8552542,
+              34.4134314
+            ],
+            [
+              -119.8552548,
+              34.4133936
+            ],
+            [
+              -119.8551823,
+              34.4133291
+            ],
+            [
+              -119.8551124,
+              34.413382
+            ],
+            [
+              -119.8551007,
+              34.4133928
+            ],
+            [
+              -119.8550865,
+              34.4133925
+            ],
+            [
+              -119.8550865,
+              34.4134308
+            ],
+            [
+              -119.8552542,
+              34.4134314
+            ]
+          ]
+        ]
+      },
+      "id": "way/558220103"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/558704260",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "6560",
+        "addr:postcode": "93117",
+        "addr:street": "Pardall Road",
+        "amenity": "cafe",
+        "building": "yes",
+        "building:levels": "1",
+        "contact:facebook": "https://www.facebook.com/Campus-Point-Coffee-Isla-Vista-101045764610454",
+        "localwiki": "https://localwiki.org/islavista/Java_Jones",
+        "name": "Campus Point Coffee",
+        "old_name": "Java Jones"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.8567352,
+              34.413305
+            ],
+            [
+              -119.8568231,
+              34.4133052
+            ],
+            [
+              -119.8568512,
+              34.4133054
+            ],
+            [
+              -119.8568509,
+              34.4132231
+            ],
+            [
+              -119.8568396,
+              34.4132231
+            ],
+            [
+              -119.8567356,
+              34.413223
+            ],
+            [
+              -119.8567352,
+              34.413305
+            ]
+          ]
+        ]
+      },
+      "id": "way/558704260"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/565867024",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "966",
+        "addr:postcode": "93117",
+        "addr:street": "Embarcadero del Mar",
+        "addr:unit": "B",
+        "amenity": "cafe",
+        "building": "yes",
+        "building:levels": "1",
+        "localwiki": "https://localwiki.org/islavista/Deja_Vu_Cafe",
+        "name": "Déjà Vu Café",
+        "opening_hours": "11:00-14:00",
+        "phone": "+1-805-968-8888",
+        "website": "https://www.facebook.com/Deja-Vu-Cafe-IV-170644050321166/"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.8569472,
+              34.4117255
+            ],
+            [
+              -119.8567002,
+              34.4117251
+            ],
+            [
+              -119.8566995,
+              34.4117911
+            ],
+            [
+              -119.8569457,
+              34.4117918
+            ],
+            [
+              -119.8569456,
+              34.4117815
+            ],
+            [
+              -119.8569488,
+              34.4117815
+            ],
+            [
+              -119.8569472,
+              34.4117255
+            ]
+          ]
+        ]
+      },
+      "id": "way/565867024"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/579741589",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "901",
+        "addr:postcode": "93117",
+        "addr:street": "Embarcadero del Mar",
+        "addr:unit": "101",
+        "amenity": "cafe",
+        "building": "yes",
+        "building:levels": "4",
+        "name": "Tea Tea"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.8573268,
+              34.4130424
+            ],
+            [
+              -119.8573268,
+              34.4130322
+            ],
+            [
+              -119.857374,
+              34.4130321
+            ],
+            [
+              -119.857374,
+              34.4129967
+            ],
+            [
+              -119.8573739,
+              34.4128909
+            ],
+            [
+              -119.8572706,
+              34.4128908
+            ],
+            [
+              -119.8572703,
+              34.4129171
+            ],
+            [
+              -119.8572705,
+              34.4130376
+            ],
+            [
+              -119.8572708,
+              34.4130424
+            ],
+            [
+              -119.8573268,
+              34.4130424
+            ]
+          ]
+        ]
+      },
+      "id": "way/579741589"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/759150529",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "938",
+        "addr:postcode": "93117",
+        "addr:street": "Embarcadero del Norte",
+        "amenity": "cafe",
+        "building": "yes",
+        "building:levels": "1",
+        "cuisine": "mediterranean",
+        "localwiki": "https://localwiki.org/islavista/Aladdin_Cafe",
+        "name": "Aladdin",
+        "old_name": "Borsodi's Coffehouse",
+        "website": "https://www.facebook.com/AladdinCafeIV/?rf=1862577734019336"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.855114,
+              34.4122492
+            ],
+            [
+              -119.8552859,
+              34.4122494
+            ],
+            [
+              -119.8552849,
+              34.4121248
+            ],
+            [
+              -119.8551144,
+              34.4121235
+            ],
+            [
+              -119.855114,
+              34.4122492
+            ]
+          ]
+        ]
+      },
+      "id": "way/759150529"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/759150530",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "948",
+        "addr:postcode": "93117",
+        "addr:street": "Embarcadero Del Norte",
+        "addr:unit": "101",
+        "amenity": "cafe",
+        "building": "yes",
+        "building:levels": "1",
+        "contact:website": "https://www.facebook.com/cajeIV",
+        "internet_access": "yes",
+        "localwiki": "https://localwiki.org/islavista/Caje",
+        "name": "Cajé Café",
+        "opening_hours": "Mo-Th 06:30-22:00; Fr-Su 07:00-22:00",
+        "outdoor_seating": "yes",
+        "website": "http://cajeislavista.com/"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -119.8552472,
+              34.4120985
+            ],
+            [
+              -119.8552479,
+              34.4119763
+            ],
+            [
+              -119.8551964,
+              34.4119762
+            ],
+            [
+              -119.8551964,
+              34.4120984
+            ],
+            [
+              -119.8552472,
+              34.4120985
+            ]
+          ]
+        ]
+      },
+      "id": "way/759150530"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/448863565",
+        "amenity": "cafe",
+        "brand": "Starbucks",
+        "brand:wikidata": "Q37158",
+        "brand:wikipedia": "en:Starbucks",
+        "cuisine": "coffee_shop",
+        "name": "Starbucks",
+        "official_name": "Starbucks Coffee",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.84817,
+          34.4114691
+        ]
+      },
+      "id": "node/448863565"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2968156973",
+        "amenity": "cafe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8447611,
+          34.4156158
+        ]
+      },
+      "id": "node/2968156973"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3119924739",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "6551",
+        "addr:postcode": "93117",
+        "addr:street": "Trigo Road",
+        "addr:unit": "1",
+        "amenity": "cafe",
+        "cuisine": "bagels;coffee;breakfast;brunch",
+        "internet_access": "no",
+        "level": "0",
+        "localwiki": "https://localwiki.org/islavista/Bagel_Cafe",
+        "name": "Bagel Café",
+        "opening_hours": "06:30-15:00",
+        "phone": "+1-805-685-7114",
+        "smoking": "no",
+        "website": "https://ivbagelcafe.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8570194,
+          34.4110042
+        ]
+      },
+      "id": "node/3119924739"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3806920257",
+        "amenity": "cafe",
+        "cuisine": "Yoshinoya;cafe",
+        "internet_access": "wlan",
+        "name": "Courtyard Cafe",
+        "opening_hours": "Mo-Fr 07:30-17:15",
+        "outdoor_seating": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8405306,
+          34.4148738
+        ]
+      },
+      "id": "node/3806920257"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5449247187",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "6530",
+        "addr:postcode": "93117",
+        "addr:street": "Seville Road",
+        "addr:unit": "101",
+        "amenity": "cafe",
+        "cuisine": "donut",
+        "localwiki": "https://localwiki.org/islavista/Spudnuts_Donuts",
+        "name": "Spudnuts Donuts",
+        "opening_hours": "Mo-We 07:30-00:00; Th-Sa 07:30-02:00; Su 08:00-00:00",
+        "phone": "+1-805-845-4517",
+        "website": "http://www.spudnutsdonutssb.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8547534,
+          34.4118972
+        ]
+      },
+      "id": "node/5449247187"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7090604643",
+        "addr:city": "Isla Vista",
+        "addr:housenumber": "6530",
+        "addr:postcode": "93117",
+        "addr:street": "Seville Road",
+        "amenity": "cafe",
+        "contact:phone": "+1-805-324-4350",
+        "cuisine": "asian;tea;chicken",
+        "name": "Mojo Asian Fusion Café",
+        "opening_hours": "Su-Th 11:00-22:00; Fr-Sa 12:00-00:00",
+        "website": "https://www.mojocafes.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8548859,
+          34.4118973
+        ]
+      },
+      "id": "node/7090604643"
+    }
+  ]
+}

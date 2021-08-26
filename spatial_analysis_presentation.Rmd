@@ -1,6 +1,103 @@
 ---
-title: "Habits"
-author: John Doe
-date: March 22, 2005
-output: revealjs::revealjs_presentation
+title: "Spatial Data Analysis"
+author: Evgeny Noi
+date: August 26, 2021
+output:
+  revealjs::revealjs_presentation:
+    theme: simple
+    highlight: pygments
+    center: true
+    transition: default
 ---
+
+# Possibly a first use case of spatial analysis 
+
+
+## Dr John Snow and Cholera Outbreak
+
+> One of the first examples of spatial analysis is from epidemiology. Dr John Snow investigated the cholera outbreak in 1854 in London. He postulated that cholera was transmitted through drinking water and not air. He noticed that the outbreak was centered on Broad Street public drinking pump. 
+
+
+##
+
+<a href="https://imgur.com/IXSDKf4"><img src="https://i.imgur.com/IXSDKf4.png" title="source: imgur.com" style="width:75%"/></a>
+
+## Repeating the first spatial analysis with current tools
+
+- We will be using ArcGIS Online to work with the map. 
+- Follow this [link](https://learn.arcgis.com/en/projects/map-a-historic-cholera-outbreak/) to start 
+- ESRI provides many different resources that will help you get started on spatial analysis: 
+  - [Identify areas near commercial campgrounds where nassella tussock is a threat to campers](https://learn.arcgis.com/en/projects/solve-a-spatial-problem/arcgis-enterprise/)
+  - [Map accident data regarding pedestrians and cyclists struck by vehicles](https://learn.arcgis.com/en/projects/policy-mapping-safe-streets-to-schools/)
+  - [Collect and analyze the location and condition of drinking water fountains across Berkeley,CA](https://learn.arcgis.com/en/projects/evaluate-equitable-drinking-fountain-distribution/)
+  - [Map racial disparities in breast cancer mortality rates](https://learn.arcgis.com/en/projects/map-breast-cancer-differences-by-ethnicity/arcgis-pro/)
+  - [Create homelessness risk map, explore spatial patteerns of various risk factors and compare characteristics among different homeless communities](https://learn.arcgis.com/en/projects/help-end-homelessness/)
+
+## There are many more projects...
+
+- [All other ArcGIS Pro projects](https://learn.arcgis.com/en/gallery/#?p=arcgispro)
+
+<!-- this is a comment -->
+# Stages in Spatial Data Analysis
+
+## 1. **Map** the variable you are researching 
+
+- choropleth map 
+- flow map 
+- cartogram 
+- dot density map 
+- isoline map 
+- ... 
+
+##
+<a href="https://imgur.com/WlfTNZV"><img src="https://i.imgur.com/WlfTNZV.png" title="source: imgur.com" style="width:70%" /></a>
+
+- Which areas (counties) have the highest mortality? 
+  - Why is Chicago significant and Minneapolis is not? 
+  - What happens in Montana? 
+  - What happens along the coast? 
+
+# Analyzing attribute information
+
+## Remember normal distributions? 
+
+```{r, echo=F}
+
+x = rnorm(1000)
+
+hist(x, c='blue')
+
+```
+
+## Histograms 
+
+```{r, echo=F}
+
+attach(mtcars)
+
+par(mfrow = c(2, 1)) # Create a 2 x 2 plotting matrix
+
+hist(mpg, c='blue')
+hist(hp, c='red')
+
+```
+
+## Scatter plot
+
+```{r echo=F}
+
+plot(hp, mpg, main = 'Miles per gallon vs horse power')
+
+```
+
+## Is there a correlation? (fit the line)
+
+
+```{r echo=F, results='hide'}
+
+lm = lm(hp~mpg, data=mtcars)
+plot(hp~mpg) + abline(lm, col='red')
+
+```
+
+# Examples of Spatial Operations

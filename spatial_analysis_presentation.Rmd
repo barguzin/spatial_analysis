@@ -269,13 +269,13 @@ ggplot(nc) +
 
 ## Major US cities 
 
-```{r echo=F}
+```{r echo=F, message=F, warning=F, results='hide'}
 
 library(maps)
 
 data(stateMapEnv)
 
-map('state', fill = TRUE, col = palette())
+#map('state', fill = TRUE, col = palette())
 
 states = st_as_sf(map('state', plot=F, fill=T))
 norcar = states[states$ID=='north carolina',]
@@ -296,10 +296,18 @@ ggplot(us_cities) + geom_sf(data = usa, fill='white') + theme_bw() +
 
 ```
 
-## Cities in North Carolina and Railroads
+## Count cities in each county 
+
+> - Cities are points, counties are polygons 
+> - aasd
 
 ```{r echo=F}
 
+filtered = st_filter(us_cities, nc_t, .pred = st_intersects)
 
+ggplot(filtered) + 
+  geom_sf(data = nc_t, fill='white') +
+  geom_point(aes(x=st_coordinates(filtered)[,1], y=st_coordinates(filtered)[,2], size=POP_2010, color='red')) + 
+  xlab('x') + ylab('y') + theme_bw()
 
 ```

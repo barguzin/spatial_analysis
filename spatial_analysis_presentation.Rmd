@@ -219,7 +219,7 @@ ggplot() +
 
 ## Centroids
 
-```{r echo=F, message=F}
+```{r echo=F, message=F, warning=F}
 
 # using sf
 sf_cent <- st_centroid(nc)
@@ -235,7 +235,7 @@ ggplot() +
 
 ## Centroids + Proportional Symbols
 
-```{r echo=F, message=F}
+```{r echo=F, message=F, warning=F}
 
 nc$lng = st_coordinates(st_centroid(nc))[,1]
 nc$lat = st_coordinates(st_centroid(nc))[,2]
@@ -252,7 +252,7 @@ ggplot(nc) +
 
 ## Centroids + Proportional Symbols (Size) + Hue
 
-```{r echo=F, message=F}
+```{r echo=F, message=F, warning=F}
 
 #nc$lng = st_coordinates(st_centroid(nc))[,1]
 #nc$lat = st_coordinates(st_centroid(nc))[,2]
@@ -264,5 +264,42 @@ ggplot(nc) +
   geom_point(aes(x=lng, y=lat, size=BIR74, color=BIR74)) + 
   scale_color_continuous(type='viridis') +
   theme_minimal()
+
+```
+
+## Major US cities 
+
+```{r echo=F}
+
+library(maps)
+
+data(stateMapEnv)
+
+map('state', fill = TRUE, col = palette())
+
+states = st_as_sf(map('state', plot=F, fill=T))
+norcar = states[states$ID=='north carolina',]
+usa = st_as_sf(map('usa', plot = FALSE, fill = TRUE))
+us_cities = st_read('https://raw.githubusercontent.com/ResidentMario/geoplot-data/master/usa-cities.geojson')
+laea = st_crs("+proj=laea +lat_0=30 +lon_0=-95") # Lambert equal area
+usa <- st_transform(usa, laea)
+us_cities = st_transform(us_cities, laea)
+nc_t = st_transform(nc, laea)
+nc_t2 = st_transform(norcar, laea)
+
+ggplot(us_cities) + geom_sf(data = usa, fill='white') + theme_bw() +
+  geom_sf(data = nc_t2, fill='red', lwd=0) +
+  geom_point(aes(x=st_coordinates(us_cities)[,1], y=st_coordinates(us_cities)[,2], size=POP_2010), alpha=.5) + 
+  xlim(min(st_coordinates(usa)[,1]), max(st_coordinates(usa)[,1])) + 
+  ylim(min(st_coordinates(usa)[,2]), max(st_coordinates(usa)[,2])) + 
+  xlab('x') + ylab('y')
+
+```
+
+## Cities in North Carolina and Railroads
+
+```{r echo=F}
+
+
 
 ```

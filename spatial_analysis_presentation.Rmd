@@ -299,7 +299,12 @@ ggplot(us_cities) + geom_sf(data = usa, fill='white') + theme_bw() +
 ## Count cities in each county 
 
 > - Cities are points, counties are polygons 
-> - aasd
+> - Find points in each polygon 
+> - Tally points
+> - Use graduated symbols map 
+
+
+## Cities in NC
 
 ```{r echo=F}
 
@@ -307,7 +312,138 @@ filtered = st_filter(us_cities, nc_t, .pred = st_intersects)
 
 ggplot(filtered) + 
   geom_sf(data = nc_t, fill='white') +
-  geom_point(aes(x=st_coordinates(filtered)[,1], y=st_coordinates(filtered)[,2], size=POP_2010, color='red')) + 
+  geom_point(aes(x=st_coordinates(filtered)[,1], y=st_coordinates(filtered)[,2], size=POP_2010), color='blue') + 
   xlab('x') + ylab('y') + theme_bw()
 
 ```
+
+
+## Cities in NC (choropleth)
+
+```{r echo=F}
+
+sj1 = st_join(filtered, nc_t, join=st_within)
+sj2 = st_join(filtered, nc_t)
+
+# count trees per census tract
+tally_cities <- sj1 %>% count(FIPS, sort=T)
+
+tally_2 = nc_t %>% 
+  st_join(filtered) %>%
+  group_by(FIPS) %>% 
+  summarize(n_cities = n())
+
+#plot(tally_2['n_cities'])
+
+ggplot(tally_2) + 
+  geom_sf(data=nc_t, fill='white') + 
+  geom_sf(aes(fill=n_cities)) + 
+  scale_fill_gradient(low='yellow', high='red')
+
+```
+
+
+## Here is how you would do it in ArcGIS Pro: 
+
+- Go to Geoprocessing and use *Summarize Within* tool. Find instructions [here](https://support.esri.com/en/technical-article/000023531). 
+
+
+# Example 2: Look at hazardous waster disposal near cities in NC 
+
+## Size of NC cities 
+
+```{r, echo=F}
+
+#par(mfrow = c(2,1))
+
+hist(filtered$POP_2010, main='City Population in NC')
+#hist(filtered$ELEV_IN_FT)
+
+```
+
+
+## Hazardous waste 
+
+```{r echo=F}
+
+haz = st_read("https://raw.githubusercontent.com/barguzin/spatial_analysis/master/haz.geojson")
+
+haz %>% count(LOC_COUNTY, sort=T) %>% 
+  st_drop_geometry() %>%
+  head(10) 
+
+```
+
+
+## Analysis outline 
+
+> - Select only NC cities>50,000 population 
+> - We cannot use degree projection, so we will need UTM 
+> - Create a 15km buffer around these cities 
+> - when we create a buffer from point layer (red circles) we get a polygon layer (black circles)
+
+
+## 
+
+```{r, echo=F}
+
+city100k = filtered %>% filter(POP_2010>100000)
+city50k = filtered %>% filter(POP_2010>50000)
+
+city50k_m = st_transform(city50k, 32119)
+city50k_m_buf = st_buffer(city50k_m, 15000)
+
+#plot(st_geometry(city50k))
+#plot(st_geometry(city50k_m_buf), col ='black')
+#plot(st_geometry(city50k_m), add=T, col = 'white')
+
+ggplot() + 
+  geom_sf(data=x) + 
+  geom_sf(data=city50k_m_buf, fill='black') + 
+  geom_sf(data=city50k_m, col='red')
+
+```
+
+
+## Combine buffers into one shape 
+
+```{r, echo=F}
+
+comb = st_combine(city50k_m_buf)
+#uni = st_union(city50k_m_buf, by_feature = F)
+#comb_five = st_cast(comb, "POLYGON") # this returns original 16 geoms
+comb_five = st_cast(st_union(city50k_m_buf), "POLYGON")
+
+plot(comb_five)
+
+```
+
+
+## Count the number of haz waste disposal sites by these buffer zones 
+
+```{r echo=F}
+
+tally_3 = comb_five %>% 
+  st_as_sf() %>%
+  mutate(sid = row_number()) %>%
+  st_join(st_transform(haz,32119)) %>%
+  group_by(sid) %>% 
+  summarize(count_haz = n())
+
+#plot(tally_2['n_cities'])
+
+ggplot(tally_3) + 
+  geom_sf(data=nc_t, fill='white') + 
+  geom_sf(aes(fill=count_haz)) + 
+  scale_fill_gradient(low='yellow', high='red')
+
+```
+
+
+# Plan for next week 
+
+
+## Plan 
+
+- Submit your Project Data (project panel) by Monday midnight 
+- Browse the ArcGIS spatial analysis projects and find something similar to your project 

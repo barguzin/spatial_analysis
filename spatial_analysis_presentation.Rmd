@@ -419,6 +419,20 @@ plot(comb_five)
 ```
 
 
+## Plot hazard sites on a map 
+```{r echo=F}
+
+haz_m = st_transform(haz, 32119)
+
+ggplot() + 
+  geom_density_2d_filled(data=haz_m, aes(x=st_coordinates(haz_m)[,1],y=st_coordinates(haz_m)[,2])) + 
+  geom_sf(data=x, alpha=.2, col='white', lwd=.1) + 
+  geom_sf(data=haz_m, size=.2, color='yellow')+ 
+  theme_minimal()
+  
+```
+
+
 ## Count the number of haz waste disposal sites by these buffer zones 
 
 ```{r echo=F}

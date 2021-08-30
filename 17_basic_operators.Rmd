@@ -1,0 +1,146 @@
+---
+title: "Spatial Analysis Inference"
+author: Evgeny Noi
+date: August 30, 2021
+output:
+  revealjs::revealjs_presentation:
+    theme: simple
+    highlight: pygments
+    center: true
+    transition: default
+---
+
+# Types of Operations on Spatial Data 
+
+## Common Table and Attribute Tasks
+
+> Attributes are accessed through the Attribute table in ArcGIS Pro. 
+
+- Creating tables
+- Creating a layer from a table of coordinates (XY table to point)
+- Import, copy and convert (e.g. [Excel to Table](https://pro.arcgis.com/en/pro-app/latest/tool-reference/conversion/excel-to-table.htm)) 
+- Adding and modifying fields (e.g. [Fields Toolset](https://pro.arcgis.com/en/pro-app/latest/tool-reference/data-management/an-overview-of-the-fields-toolset.htm))
+- Displaying tables (e.g. Filtering - see next slide) 
+
+
+## Filtering 
+
+- **Filtering**. One can use Query Builder to write a query interactively or in SQL editor.  
+
+Interactive Mode: 
+
+<a href="https://pro.arcgis.com/en/pro-app/latest/help/mapping/navigation/GUID-5C1E7B80-2B22-4085-86C4-98AB356DE380-web.png"> <img src="https://pro.arcgis.com/en/pro-app/latest/help/mapping/navigation/GUID-5C1E7B80-2B22-4085-86C4-98AB356DE380-web.png"> </a>
+
+##
+
+SQL Mode: 
+
+You can find more informaiton on how to use SQL in ArcGIS in the [ArcGIS Pro Documents](https://pro.arcgis.com/en/pro-app/latest/help/mapping/navigation/sql-reference-for-elements-used-in-query-expressions.htm)
+
+<a href="https://pro.arcgis.com/en/pro-app/latest/help/mapping/navigation/GUID-7F25BFCA-BF70-4C10-AB91-66FCF4C1A770-web.png"> <img src="https://pro.arcgis.com/en/pro-app/latest/help/mapping/navigation/GUID-7F25BFCA-BF70-4C10-AB91-66FCF4C1A770-web.png"> </a>
+
+## Common table and attribute tasks 
+
+- Interactive with selected subset (e.g. **[Zoom to highlighted](https://pro.arcgis.com/en/pro-app/latest/help/data/tables/highlight-records-within-a-selection-set.htm)**)
+- Editing attribute values (e.g. you lab C) 
+- Calculating new fields (see [docs](https://pro.arcgis.com/en/pro-app/latest/tool-reference/data-management/calculate-field.htm))
+- Associations among tables (joining, relating, using relationship classes)
+  - Pay attention to [spatial joins](https://pro.arcgis.com/en/pro-app/latest/help/data/tables/spatial-joins-by-feature-type.htm)
+- Geocoding 
+- Exporting
+  
+## How Spatial Join Works 
+
+<a href="https://gisgeography.com/wp-content/uploads/2019/04/Spatial-Join-1265x723.png"> <img src="https://gisgeography.com/wp-content/uploads/2019/04/Spatial-Join-1265x723.png"> </a>
+
+## Common Spatial Join Types
+
+![Imgur](https://i.imgur.com/rFkXKCr.png)
+
+## Join Relations 
+
+- One-to-one join (one point inside a polygon) 
+- One-to-many join (three points inside a polygon) 
+
+Read more on Spatial Joins in ArcGIS Pro in the [docs](https://pro.arcgis.com/en/pro-app/latest/help/data/tables/spatial-joins-by-feature-type.htm)
+
+# Common Operations on Geometry 
+
+## 1. Buffering 
+
+- Creates a polygon at a set distance surrounding the features.
+
+```{r  echo=F, results='hide', message=F, out.width="70%"}
+
+library(sf)
+library(ggplot2)
+
+nc <- st_read(system.file("shape/nc.shp", package="sf"))
+
+meck = nc[nc$NAME=="Mecklenburg",]
+meck_buff = st_buffer(meck, 5000) 
+
+#plot(st_buffer(st_geometry(meck), dist=5000), col=rgb(0,0,1), axes=T, main="Mecklenburg County \n Buffer: 5000m")
+#plot(st_geometry(meck), axes=T, add=T, col=rgb(0,1,0, 0.5))
+
+ggplot() + 
+  geom_sf(data = meck_buff, aes(fill="buffer"), alpha=.5, show.legend = "polygon") + 
+  geom_sf(data = meck, aes(fill='county'), lty=3, col='black') + 
+  scale_fill_manual(values = c("buffer"= "red")) + 
+  scale_colour_manual(values = c("county" = "blue")) + 
+  theme_minimal() + 
+  ggtitle("5000m buffer from Mecklenburg County") + 
+  guides(fill=guide_legend(title=""))
+
+```
+
+
+## Extract Toolset 
+
+- Clip 
+- Select 
+- Split 
+- Table select 
+
+
+## Clipping
+
+<a> <img src="https://desktop.arcgis.com/en/arcmap/10.3/tools/analysis-toolbox/GUID-6D3322A8-57EA-4D24-9FFE-2A9E7C6B29EC-web.gif"> </a>
+
+
+## Example from previous lecture: Clipping US cities to the North Carolina
+
+```{r echo=F, message=F, warning=F, results='hide', out.width="75%"}
+
+library(maps)
+
+data(stateMapEnv)
+
+#map('state', fill = TRUE, col = palette())
+
+states = st_as_sf(map('state', plot=F, fill=T))
+norcar = states[states$ID=='north carolina',]
+usa = st_as_sf(map('usa', plot = FALSE, fill = TRUE))
+us_cities = st_read('https://raw.githubusercontent.com/ResidentMario/geoplot-data/master/usa-cities.geojson')
+laea = st_crs("+proj=laea +lat_0=30 +lon_0=-95") # Lambert equal area
+usa <- st_transform(usa, laea)
+us_cities = st_transform(us_cities, laea)
+nc_t = st_transform(nc, laea)
+nc_t2 = st_transform(norcar, laea)
+
+ggplot(us_cities) + geom_sf(data = usa, fill='white') + theme_minimal() +
+  geom_sf(data = nc_t2, fill='red', lwd=0) +
+  geom_point(aes(x=st_coordinates(us_cities)[,1], y=st_coordinates(us_cities)[,2]), cex=.2, alpha=.5) + 
+  xlim(min(st_coordinates(usa)[,1]), max(st_coordinates(usa)[,1])) + 
+  ylim(min(st_coordinates(usa)[,2]), max(st_coordinates(usa)[,2])) + 
+  xlab('x') + ylab('y')
+
+```
+
+## Split Example 
+
+```{}
+
+rail = 
+
+```

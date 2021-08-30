@@ -66,10 +66,110 @@ Read more on Spatial Joins in ArcGIS Pro in the [docs](https://pro.arcgis.com/en
 
 # Common Operations on Geometry 
 
-## 1. Buffering 
 
-- Creates a polygon at a set distance surrounding the features.
+## Extract Toolset 
 
+- Clip 
+- Select 
+- Split 
+- Table select 
+
+
+## Clipping
+
+<a> <img src="https://desktop.arcgis.com/en/arcmap/10.3/tools/analysis-toolbox/GUID-6D3322A8-57EA-4D24-9FFE-2A9E7C6B29EC-web.gif"> </a>
+
+
+## Example from previous lecture: Clipping US cities to the North Carolina
+
+```{r echo=F, message=F, warning=F, results='hide', out.width="75%"}
+
+library(sf)
+library(ggplot2)
+library(maps)
+
+nc <- st_read(system.file("shape/nc.shp", package="sf"))
+data(stateMapEnv)
+
+#map('state', fill = TRUE, col = palette())
+
+states = st_as_sf(map('state', plot=F, fill=T))
+norcar = states[states$ID=='north carolina',]
+usa = st_as_sf(map('usa', plot = FALSE, fill = TRUE))
+us_cities = st_read('https://raw.githubusercontent.com/ResidentMario/geoplot-data/master/usa-cities.geojson')
+laea = st_crs("+proj=laea +lat_0=30 +lon_0=-95") # Lambert equal area
+usa <- st_transform(usa, laea)
+us_cities = st_transform(us_cities, laea)
+nc_t = st_transform(nc, laea)
+nc_t2 = st_transform(norcar, laea)
+
+ggplot(us_cities) + geom_sf(data = usa, fill='white') + theme_minimal() +
+  geom_sf(data = nc_t2, fill='red', lwd=0) +
+  geom_point(aes(x=st_coordinates(us_cities)[,1], y=st_coordinates(us_cities)[,2]), cex=.2, alpha=.5) + 
+  xlim(min(st_coordinates(usa)[,1]), max(st_coordinates(usa)[,1])) + 
+  ylim(min(st_coordinates(usa)[,2]), max(st_coordinates(usa)[,2])) + 
+  xlab('x') + ylab('y')
+
+```
+
+## Splitting
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-00BE6672-F6BE-4982-8A00-CB6C6D4EAB9A-web.gif"> </a>
+
+
+## Overlay Toolset [docs](https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/an-overview-of-the-overlay-toolset.htm) 
+
+- Count overlapping features 
+- Erase 
+- Identity
+- Intersect 
+- Union
+- Update 
+
+
+## Identity 
+
+> Computes a geometric intersection of the input features and identity features. The input features or portions thereof that overlap identity features will get the attributes of those identity features.
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-1721C45E-E0F9-441A-A1EA-F0949504CCAA-web.gif"> </a>
+
+
+## Intersect 
+
+> Computes a geometric intersection of the input features. Features or portions of features that overlap in all layers or feature classes will be written to the output feature class.
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-90AA6079-D9FD-41B6-AA87-F660C2FBB4AD-web.gif"> </a>
+
+
+## Union 
+
+> Computes a geometric union of the input features. All features and their attributes will be written to the output feature class.
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-6C93B42C-3D0B-4A7F-A9C7-4053D146CCB6-web.gif"> </a>
+
+## Update 
+
+> Computes the geometric intersection of the Input Features and Update Features. The attributes and geometry of the input features are updated by the update features in the output feature class.
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-E1E14FD9-5487-4E02-9230-1F43D51864F8-web.gif"> </a>
+
+
+## Proximity Toolset [docs](https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/an-overview-of-the-proximity-toolset.htm)
+
+- Buffer 
+- Multiple Ring Buffer
+- Tessalation (Thiessen Polygons) 
+- Polygon Neighbors
+
+
+## Buffer
+
+> Creates a polygon at a set distance surrounding the features.
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-267CF0D1-DB92-456F-A8FE-F819981F5467-web.png"> </a>
+
+
+##
 ```{r  echo=F, results='hide', message=F, out.width="70%"}
 
 library(sf)
@@ -95,52 +195,150 @@ ggplot() +
 ```
 
 
-## Extract Toolset 
+## Thiessen (Voronoi) Polygons
 
-- Clip 
-- Select 
-- Split 
-- Table select 
+> Any location within a Thiessen polygon is closer to its associated point than to any other point input feature.
 
-
-## Clipping
-
-<a> <img src="https://desktop.arcgis.com/en/arcmap/10.3/tools/analysis-toolbox/GUID-6D3322A8-57EA-4D24-9FFE-2A9E7C6B29EC-web.gif"> </a>
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-6231F564-FA42-435F-A4A7-CE6A88167144-web.jpg"> </a>
 
 
-## Example from previous lecture: Clipping US cities to the North Carolina
+## 
 
-```{r echo=F, message=F, warning=F, results='hide', out.width="75%"}
+```{r echo=F, results='hide', message=F, out.width="70%", error=F, warning=F}
 
-library(maps)
+# function to get polygon from boundary box
 
-data(stateMapEnv)
+bbox_polygon <- function(x) {
+  bb <- sf::st_bbox(x)
 
-#map('state', fill = TRUE, col = palette())
+  p <- matrix(
+    c(bb["xmin"], bb["ymin"], 
+      bb["xmin"], bb["ymax"],
+      bb["xmax"], bb["ymax"], 
+      bb["xmax"], bb["ymin"], 
+      bb["xmin"], bb["ymin"]),
+    ncol = 2, byrow = T
+  )
 
-states = st_as_sf(map('state', plot=F, fill=T))
-norcar = states[states$ID=='north carolina',]
-usa = st_as_sf(map('usa', plot = FALSE, fill = TRUE))
+  sf::st_polygon(list(p))
+}
+
+nc <- st_read(system.file("shape/nc.shp", package="sf"))["BIR79"]
+nc_centroids <- st_centroid(nc)
+box <- st_sfc(bbox_polygon(nc_centroids))
+
+v <- st_voronoi(st_union(nc_centroids), box)
+
+plot(st_intersection(st_cast(v), st_union(nc)), col = 0, main='Thiessen Polygons for NC county centroids') # clip to smaller box
+plot(nc_centroids, add = TRUE)
+
+```
+
+## Statistics Toolset [docs](https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/an-overview-of-the-statistics-toolset.htm)
+
+- Enrich 
+- Frequency
+- Summarize Nearby
+- Summarize Within 
+- Summary Statistics 
+- Tabulate Intersection 
+
+## Enrich 
+
+> Enriches data by adding demographic and landscape facts about the people and places that surround or are inside data locations. The output is a duplicate of your input with additional attribute fields. This tool requires an ArcGIS Online organizational account or a locally installed Business Analyst dataset.
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/GUID-2A6DF85C-EA14-4B7D-8036-6B02D871E369-web.png"> </a>
+
+## Frequency 
+
+> Reads a table and a set of fields and creates a new table containing unique field values and the number of occurrences of each unique field value.
+
+## Summarize Nearby (~Within)
+
+> Finds features that are within a specified distance of features in the input layer and calculates statistics for the nearby features. Distance can be measured as a straight-line distance, a drive-time distance (for example, within 10 minutes), or a drive distance (within 5 kilometers). Drive-time and drive distance measurements require that you are logged in to an ArcGIS Online organizational account with Network Analysis privileges, and they consume credits. 
+
+## Example scenarios using Summarize Nearby:
+
+- Calculate the total population within 5 minutes of driving time of a proposed new store location.
+- Calculate the number of freeway access ramps within a 1-mile driving distance of a proposed new store location to use as a measure of store accessibility.
+
+
+## Summary Statistics: 
+
+- Sum
+- Mean 
+- Minimum
+- Maximum
+- Range 
+- Standard Deviation
+- Count
+- First 
+- Last
+- Median 
+- Variance 
+- Unique
+
+## Tabulate Intersection
+
+> Computes the intersection between two feature classes and cross-tabulates the area, length, or count of the intersecting features.
+
+<a> <img src="https://desktop.arcgis.com/en/arcmap/10.3/tools/analysis-toolbox/GUID-6345D779-FEDB-4657-9D31-73DF7F867849-web.png"> </a>
+
+
+# More Examples on Spatial Analysis
+
+## Spatial Analysis of Rail Access in North Carolina 
+
+- Download the data from [here](https://drive.google.com/file/d/1-jQaosWdtC4rAAnOuZsrn0Ioq_yzxkQ-/view?usp=sharing) and answer the following questions: 
+  - How many segments are there in the rail data layer? 
+  - How many counties does the rail intersects with? 
+  - What is the total (combined) population of these counties? 
+  - How many cities are located within 1 mile from the railroad? 
+  - What is the combined population of those cities? 
+
+## Spatial Analysis (continued)
+
+- How many hospitals are located within 1 mile from the railroad? 
+- Calculate the number of cites per county, create a choropleth map. 
+- Calculate the number of hospitals per county, create graduated symbols map. 
+
+## 
+```{r echo=F, results='hide', message=F, out.width="70%", error=F, warning=F}
+
+rail = st_read("https://raw.githubusercontent.com/barguzin/spatial_analysis/master/rail.geojson") 
+hosp = st_read("https://raw.githubusercontent.com/barguzin/spatial_analysis/master/hospital.geojson")
+haz = st_read("https://raw.githubusercontent.com/barguzin/spatial_analysis/master/haz.geojson")
 us_cities = st_read('https://raw.githubusercontent.com/ResidentMario/geoplot-data/master/usa-cities.geojson')
+
 laea = st_crs("+proj=laea +lat_0=30 +lon_0=-95") # Lambert equal area
-usa <- st_transform(usa, laea)
+
 us_cities = st_transform(us_cities, laea)
 nc_t = st_transform(nc, laea)
-nc_t2 = st_transform(norcar, laea)
 
-ggplot(us_cities) + geom_sf(data = usa, fill='white') + theme_minimal() +
-  geom_sf(data = nc_t2, fill='red', lwd=0) +
-  geom_point(aes(x=st_coordinates(us_cities)[,1], y=st_coordinates(us_cities)[,2]), cex=.2, alpha=.5) + 
-  xlim(min(st_coordinates(usa)[,1]), max(st_coordinates(usa)[,1])) + 
-  ylim(min(st_coordinates(usa)[,2]), max(st_coordinates(usa)[,2])) + 
-  xlab('x') + ylab('y')
+filtered = st_filter(us_cities, nc_t, .pred = st_intersects)
+
+rail_t = st_transform(rail, laea)
+
+ggplot() + 
+  geom_sf(data = nc_t) + 
+  # geom_sf(data=rail) + 
+  geom_sf(data=haz, cex=.1, col='seagreen') + 
+  geom_sf(data=hosp, cex=.75, col='deeppink4') + 
+  geom_sf(data=filtered, col='blue', cex=1.5) +
+  geom_sf(data=rail_t[rail_t$OBJECTID %in% c(110,150,152,151,148), ], color='red', cex=1.2) +
+  theme_minimal() + 
+  ggtitle("Input Data Layers for North Carolina")
+
+# save files to zip for future use 
+st_write(st_transform(filtered,4326), '~/Downloads/nc_cities.shp', append=F)
+st_write(st_transform(haz, 4326), '~/Downloads/haz.shp', append=F)
+st_write(st_transform(rail_t[rail_t$OBJECTID %in% c(110,150,152,151,148), ], 4326), '~/Downloads/rail.shp', append=F) 
+st_write(st_transform(hosp, 4326), '~/Downloads/hosp.shp', append=F)
+st_write(st_transform(nc, 4326), '~/Downloads/nc_counties.shp', append=F)
 
 ```
 
-## Split Example 
 
-```{}
+# Questions? 
 
-rail = 
-
-```
+<a> <img src="https://pbs.twimg.com/media/B9V4ByGIQAEJ9b7.png" style="width:50%"> </a>

@@ -1,0 +1,159 @@
+---
+title: "Advanced Spatial Analytics"
+author: Evgeny Noi
+date: August 31, 2021
+output:
+  revealjs::revealjs_presentation:
+    theme: simple
+    highlight: pygments
+    center: true
+    transition: default
+---
+
+# Point Pattern Analysis
+
+## Centrography 
+
+<a> <img src="https://mgimond.github.io/Spatial/img/centrography.svg"> </a>
+
+
+## Central Feature
+
+> The most centrally located feature in a point, line, or polygon input 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-8D504A51-2834-4A32-B755-F4B3F1672163-web.png"> </a>
+
+## Directional Distribution 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-B8FB80BF-7577-4694-9E43-FA0AB67127A8-web.png" style="width:50%"> </a> 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-593B7842-8901-4616-AD60-0ADF9EC43835-web.gif"> </a>
+
+## Mean Center 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-6844F6F5-B0F9-4B4A-B0EA-04AC6AA8C1BC-web.png" style="width:70%"> </a> 
+
+
+## Mean Center 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-21432088-119E-441C-94E5-2E37E90E71E6-web.png"> </a>
+
+
+## Standard Distance 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-B7BB3366-2457-45A6-BEE5-EB230EC0B988-web.png"> </a>
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-0BAAF403-CB99-4ED9-A29A-A2FC0F364AF3-web.png"> </a>
+
+## Neighborhood Summary Statistics 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-7F9D2BFB-10CF-4B3E-A9E7-E58E2D966F9B-web.png"> </a>
+
+## Neighborhood Types 
+
+- Distance band 
+- Number of neighbors 
+- Contiguity edges only (also corners)
+- Theissen tessalation
+
+
+![](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-60CEBCEB-48D0-4735-9C93-DF40D5CB7E79-web.png)
+![](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-D2CC5FA2-5849-4E49-8F5F-8542AA285FF6-web.png)
+![](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-F0FC1E14-EFC8-468E-AFE2-D09537F366D1-web.png)
+![](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-0FA03DDB-219B-41FF-94E9-F1155EB6780F-web.png)
+
+# Density Analysis 
+
+## What is density 
+
+> Density analysis takes known quantities of some phenomenon and spreads them across the landscape based on the quantity that is measured at each location and the spatial relationship of the locations of the measured quantities.
+
+## 
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/GUID-90C0C497-6DED-400B-B350-6CC6F70A6096-web.png"> </a>
+
+## Kernel Density Estimates 
+
+> Conceptually, a smoothly curved surface is fitted over each point. The surface value is highest at the location of the point and diminishes with increasing distance from the point, reaching zero at the Search radius distance from the point.
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/GUID-67692D27-9EAF-4667-AD3A-6B828744B224-web.png"> </a>
+
+## Example of Kernel Density Usage 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/GUID-DC92117A-3AF1-4747-8717-2C0E6B4DD3F9-web.png"> </a>
+
+<small>Kernel density estimation is shown without a barrier (1) and with a barrier on both sides of the roads (2).</small>
+
+## Point and Line Density 
+
+![](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/GUID-0E359E73-0F24-4F5B-ABE8-026DDF644F85-web.png)
+![](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/GUID-35CBCEAB-29EB-4D58-A7B3-9654CB464D64-web.png)
+
+
+# Randomness in Spatial Distributions 
+
+## Complete Spatial Randomness 
+
+- Any event has equal probability of occurring in any location, a 1st order effect.
+- The location of one event is independent of the location of another event, a 2nd order effect.
+
+<a> <img src="https://mgimond.github.io/Spatial/img/IRP_CSR.png" style="width:30%"> </a>
+
+##
+
+>  Could the distribution of Walmart stores in MA have been the result of a CSR process? 
+
+<a> <img src="https://mgimond.github.io/Spatial/img/MA.png" style="width:50%"> </a>
+
+
+## Point Patterns 
+
+<a> <img src="https://gistbok.ucgis.org/sites/default/files/AM07_Fig3.png"> </a>
+
+
+## AAN Tool 
+
+> ArcGIS’ average nearest neighbor (ANN) tool computes the 1st nearest neighbor mean distance for all points. If ANN_ratio = 1, we have a random process. If ANN_ratio > 1, it is dispersed, and if ANN_ratio < 1 it is clustered. 
+
+<a> <img src="https://mgimond.github.io/Spatial/img/ANN_graphic1.jpg" style="width:50%"> </a>
+
+
+## ArcGIS Average Nearest Neighbor Tool (ANN) 
+
+<a> <img src="https://i.imgur.com/mX7aRX6.png" style="width:50%"> </a>
+
+
+## ANN with specified extent
+
+<a> <img src="https://mgimond.github.io/Spatial/img/ANN_graphic4.jpg" style="width:50%"> </a>
+
+
+# Monte Carlo Realizations
+
+MC - Administrative area of the Principality of Monaco. This term is used frequently in statistics to denote repeated simulated outcomes. 
+
+<a> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Monaco_pano.jpg/1920px-Monaco_pano.jpg"> </a>
+
+## Hypothesis testing 
+
+- Set null hypothesis (the data is generated from CSR process) 
+- Simulate many realizations of the process and compute a statistic (ANN or other). Plot it on the histogram. Compare simulated values with observed values. 
+- Calculate $p$-value: Count the number of more extreme realizations and devide by the total number of realizations. $\frac{319+1}{1000+1} = 0.32$
+
+<a> <img src="https://mgimond.github.io/Spatial/img/ANN_hist.png" style="width:35%"> </a>
+
+
+## Hypothesis testing II 
+
+Now imagine that we can take into account other factors (population density, median income) when generating random realizations of Walmart siting. 
+
+<a> <img src="https://mgimond.github.io/Spatial/img/Non_hom_2.png" style="width:40%"> </a>
+
+## Expected versus observed 
+
+$p$-value is below 0.05, we can reject null hypothesis. Population density affects the placement of Walmart stores. 
+
+<a> <img src="https://mgimond.github.io/Spatial/img/ANN_pop_dens.png"> </a>
+
+# Questions? 
+
+<large> 🐋 </large>

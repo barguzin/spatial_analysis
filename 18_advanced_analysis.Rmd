@@ -154,6 +154,17 @@ $p$-value is below 0.05, we can reject null hypothesis. Population density affec
 
 <a> <img src="https://mgimond.github.io/Spatial/img/ANN_pop_dens.png"> </a>
 
+
+# Hands-on Practice 
+
+## Instructions 
+
+- Use NC hazardous waste disposal sites files from yesterday
+- Calculate and map various measures of centrality for this point layer 
+- Calculate and map density using kernel density estimates 
+- Run ANN to test CSR hypothesis 
+
+
 # Questions? 
 
 <large> 🐋 </large>

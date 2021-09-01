@@ -1,7 +1,7 @@
 ---
-title: "Advanced Spatial Analytics"
+title: "Spatial Autocorrelation and Contiguity"
 author: Evgeny Noi
-date: August 31, 2021
+date: September 1, 2021
 output:
   revealjs::revealjs_presentation:
     theme: simple

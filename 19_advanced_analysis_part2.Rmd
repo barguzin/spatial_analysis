@@ -1,0 +1,240 @@
+---
+title: "Advanced Spatial Analytics"
+author: Evgeny Noi
+date: August 31, 2021
+output:
+  revealjs::revealjs_presentation:
+    theme: simple
+    highlight: pygments
+    center: true
+    transition: default
+---
+
+# Probability 101 
+
+## Terminology
+- *null hypothesis ($H_0$)* 
+- $p$-value: tells you how likely it is that your data could have occurred under the null hypothesis. 
+- $\alpha$: significance level (typically 0.05) 
+- if $p$-value $\leq$ $\alpha$ we reject the null.
+- if $p$-value $\geq$ $\alpha$ we cannot reject the null.
+
+
+# Spatial Contiguity and Spatial Autocorrelation 
+
+Up until this point we looked at the geometric attributes for spatial features. What if we wanted to look at the geometric and attribute information simultaneously? 
+
+## Spatial Neighborhoods 
+
+We covered some of the main types of neighborhoods yesterday: 
+
+- Distance band 
+- Number of neighbors 
+- **Contiguity** 
+- Thiessen tessalation
+
+
+## Spatial Contiguity
+
+> Different types of spatial contiguity: Bishop, Rook, Queen.
+
+<a> <img src="https://d3i71xaburhd42.cloudfront.net/edc8bde1bba660f775d8a7d50b91fe24ed1a96c9/5-Figure3-1.png"> </a>
+
+
+## Spatial Weights for California
+
+```{r, echo=F, results='hide', message=F, warning=F, error=F}
+
+library(sf) 
+library(ggplot2)
+library(spdep)
+
+ca = st_read("ca_counties/CA_Counties_TIGER2016.shp")
+
+ggplot() + 
+  geom_sf(data=ca) + 
+  theme_minimal()
+
+```
+
+
+## Queen Contiguity Weights
+
+```{r, echo=F, results='hide', message=F, warning=F, error=F}
+
+ca = st_transform(ca,4326)
+queen_n = poly2nb(ca, queen=T)
+queen_n_sp <- as(ca, 'Spatial')
+queen_n_sf <- as(nb2lines(queen_n, coords = coordinates(queen_n_sp)), 'sf')
+queen_n_sf = st_set_crs(queen_n_sf, 4326)
+
+#rook_n_sf = st_transform(rook_n_sf, 3857)
+
+ggplot() + 
+  geom_sf(data=ca) + 
+  geom_sf(data=queen_n_sf, col='red') + 
+  theme_minimal()
+
+```
+
+
+## Rook's Contiguity Weights
+
+```{r, echo=F, results='hide', message=F, warning=F, error=F}
+
+#ca = st_transform(ca,4326)
+rook_n = poly2nb(ca, queen=F)
+rook_n_sp <- as(ca, 'Spatial')
+rook_n_sf <- as(nb2lines(rook_n, coords = coordinates(rook_n_sp)), 'sf')
+rook_n_sf = st_set_crs(rook_n_sf, 4326)
+
+#rook_n_sf = st_transform(rook_n_sf, 3857)
+
+ggplot() + 
+  geom_sf(data=ca) + 
+  geom_sf(data=rook_n_sf, col='blue') + 
+  theme_minimal()
+
+```
+
+
+## KNN (k=6) Contiguity Weights
+
+```{r, echo=F, results='hide', message=F, warning=F, error=F}
+
+#ca = st_transform(ca,4326)
+coords <- coordinates(as(ca, "Spatial"))
+ca.knn <- knearneigh(coords, k=6)
+ca.knn2 <- knn2nb(ca.knn)
+
+knn_n_sf <- as(nb2lines(ca.knn2, coords = coordinates(rook_n_sp)), 'sf')
+knn_n_sf = st_set_crs(knn_n_sf, 4326)
+
+#rook_n_sf = st_transform(rook_n_sf, 3857)
+
+ggplot() + 
+  geom_sf(data=ca) + 
+  geom_sf(data=knn_n_sf, col='magenta') + 
+  theme_minimal()
+```
+
+
+## Production of Teddy Bears in CA (made-up data) 
+
+```{r, echo=F, results='hide', message=F, warning=F, error=F}
+
+# generate random variable for demo 
+
+ca$rr = rnorm(dim(ca)[1], 10, 5)
+
+ggplot(ca, aes(rr)) + 
+  geom_histogram() + 
+  ggtitle("Production of teddy bears") + 
+  theme_minimal() + xlab('')
+
+```
+
+
+## Global Moran's I
+
+```{r, echo=F, message=F, warning=F, error=F}
+
+listw <- nb2listw(rook_n)
+
+globalMoran <- moran.test(ca$rr, listw)
+globalMoran
+
+```
+
+## How about COVID-19 vaccination rates? 
+
+```{r, echo=F, results='hide', message=F, warning=F}
+
+library(dplyr) 
+library(tidyr)
+
+df = read.csv('covid19vaccinesbycounty.csv')
+
+df2 = df %>% filter(administered_date=='2021-08-30' & california_flag=='California')
+
+merged_ca = merge(ca, df2, by.x = "NAME", by.y = 'county', fill=-9999)
+
+# Palette
+pal <- hcl.colors(6, "Inferno", rev = TRUE, alpha = 0.7)
+
+# Create custom labels - e.g. (0k-10k]
+labs <- c(0, 10000, 25000, 50000, 100000, 250000, 500000)
+labs_plot <- paste0("(", labs[1:6], "k-", labs[2:7], "k]")
+
+ggplot(merged_ca, aes(fill=cumulative_total_doses)) + 
+  #geom_histogram() + 
+  geom_sf() + 
+  ggtitle("Cumulative total doses") +
+  scale_fill_viridis_b(trans='log') + 
+  theme_minimal() + 
+  xlab('') 
+
+```
+
+## Global Moran's I with vaccines data
+
+```{r, echo=F, message=F, warning=F, error=F}
+
+rook_n2 = poly2nb(merged_ca, queen=F)
+listw2 <- nb2listw(rook_n2)
+
+globalMoran2 <- moran.test(merged_ca$cumulative_total_doses, listw2)
+globalMoran2
+
+#globalMoran2[["estimate"]][["Moran I statistic"]]
+
+```
+
+## 
+
+Upper right and lower left: high-high and low-low (positive SA); the other two - negative SA (dissimilar values). 
+
+```{r, echo=F}
+
+moran <- moran.plot(merged_ca$cumulative_total_doses, listw = nb2listw(rook_n2, style = "W"), 
+                    xlab='total cases', ylab='lag(total cases)', labels=as.character(merged_ca$NAME), main="Moran's Plot")
+
+```
+
+## Hotspots and Coldspots 
+
+```{r echo=F}
+
+# Create a LISA map
+locm <- localmoran(merged_ca$cumulative_total_doses, nb2listw(rook_n2, style = "W"))  #Calculate the local Moran
+
+merged_ca$svac <- scale(merged_ca$cumulative_total_doses)
+merged_ca$lag_svac <- lag.listw( nb2listw(rook_n2, style = "W"), merged_ca$svac)
+
+# Organize the data...
+merged_ca$quad_sig <- NA
+merged_ca[(merged_ca$svac >= 0 & merged_ca$lag_svac >= 0) & (locm[, 5] <= 0.05), "quad_sig"] <- 1
+merged_ca[(merged_ca$svac <= 0 & merged_ca$lag_svac <= 0) & (locm[, 5] <= 0.05), "quad_sig"] <- 2
+merged_ca[(merged_ca$svac >= 0 & merged_ca$lag_svac <= 0) & (locm[, 5] <= 0.05), "quad_sig"] <- 3
+merged_ca[(merged_ca$svac >= 0 & merged_ca$lag_svac <= 0) & (locm[, 5] <= 0.05), "quad_sig"] <- 4
+merged_ca[(merged_ca$svac <= 0 & merged_ca$lag_svac >= 0) & (locm[, 5] <= 0.05), "quad_sig"] <- 5
+
+# Set up the map...
+breaks <- seq(1, 5, 1)
+labels <- c("high-High", "low-Low", "High-Low", "Low-High", "Not Signif.")
+np <- findInterval(merged_ca$quad_sig, breaks)
+colors <- c("red", "blue", "lightpink", "skyblue2", "white")
+plot(st_geometry(merged_ca), col = colors[np])
+mtext("Local Moran's I", cex = 1.5, side = 3, line = 1)
+legend("topleft", legend = labels, fill = colors, bty = "n")
+
+```
+
+
+## Global Moran's I in ArcGIS Pro 
+
+Check out the docs [here](https://desktop.arcgis.com/en/arcmap/10.3/tools/spatial-statistics-toolbox/spatial-autocorrelation.htm)
+
+<a> <img src="https://desktop.arcgis.com/en/arcmap/10.3/tools/spatial-statistics-toolbox/GUID-6B7A4241-EFD4-4B78-9E0A-DCA0364B9E94-web.png"> </a>
+
+# Questions 🐢 

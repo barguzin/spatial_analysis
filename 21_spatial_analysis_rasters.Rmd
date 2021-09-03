@@ -1,0 +1,243 @@
+---
+title: "Spatial Analysis with Rasters and ArcGIS Model Builder"
+author: Evgeny Noi
+date: September 6, 2021
+output:
+  revealjs::revealjs_presentation:
+    theme: simple
+    highlight: pygments
+    center: true
+    transition: default
+---
+
+# Raster Processing Basics 
+
+Please refer to [Neon Project](https://www.neonscience.org/resources/learning-hub/tutorials/raster-data-r) for more details and R-code examples. Many definitions came from USGS and geodetics.com. 
+
+##
+![](https://geodetics.com/wp-content/uploads/2019/10/Geodetics%E2%80%99-acquired-dataset-of-a-park-containing-2993079-LiDAR-points.png)
+
+## Terminology 
+
+- A DEM (Digital Elevation Model) Represents the bare-Earth surface, removing all natural and built features;
+- A DSM (Digital Surface Model) captures both the natural and built/artificial features of the environment, as shown below;
+- A DTM (Digital Terrain Model)  typically augments a DEM, by including vector features of the natural terrain, such as rivers and ridges. A DTM may be interpolated to generate a DEM, but not vice versa.
+- Hillshade: Shaded relief, or hillshading, is a technique where a lighting effect is added to a map based on elevation variations within the landscape.
+
+##
+<a> <img src="https://www.battelleecology.org/sites/default/files/images/dc-spatial-raster/lidarTree-height.png" style="width:50%"> </a>
+
+
+## Terrain Model 
+
+```{r echo=F, message=F}
+
+# load the raster, sp, and rgdal packages
+library(raster)
+library(sp)
+library(rgdal)
+
+DEM <- raster('~/Downloads/NEON-DS-Field-Site-Spatial-Data/SJER/DigitalTerrainModel/SJER2013_DTM.tif')
+DEM
+
+DEM <- setMinMax(DEM)
+
+cat("Range:")
+cellStats(DEM, range)
+
+```
+
+## Projections Refresher 
+
+<a> <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Utm-zones-USA.svg"> </a>
+
+```{r echo=F}
+
+hist(DEM, main="Distribution of elevation values", xlab='elevation,m',
+     col= "forestgreen", 
+     maxpixels=22000000)
+
+```
+
+## Plotting raster 
+
+```{r echo=F}
+
+plot(DEM, 
+         main="Digital Elevation Model, SJER") # add title with main
+
+```
+
+
+## Same picture, more pixels
+
+```{r echo=F}
+
+# create a plot of our raster
+image(DEM)
+
+```
+
+
+## Filter values and plot 
+
+```{r echo=F}
+
+# specify the range of values that you want to plot in the DEM
+# just plot pixels between 250 and 300 m in elevation
+image(DEM, zlim=c(450,520))
+
+```
+
+
+## Use colors from terrain palette 
+
+```{r echo=F}
+
+# we can specify the colors too
+col <- terrain.colors(5)
+image(DEM, zlim=c(250,375), main="Digital Elevation Model (DEM)", col=col)
+
+```
+
+## Would be nice to add a legend 
+
+```{r echo=F}
+
+# add a color map with 5 colors
+col=terrain.colors(5)
+
+# add breaks to the colormap (6 breaks = 5 segments)
+brk <- c(250, 300, 350, 400, 450, 500)
+
+plot(DEM, col=col, breaks=brk, main="DEM with more breaks")
+
+```
+
+## Fewer breaks
+
+```{r echo=F}
+
+#add a color map with 4 colors
+col=terrain.colors(4)
+#add breaks to the colormap (6 breaks = 5 segments)
+brk <- c(200, 300, 350, 400,500)
+plot(DEM, col=col, breaks=brk, main="DEM with fewer breaks")
+
+```
+
+## Using *spplot* R-library for plotting 
+
+```{r echo=F}
+
+spplot(DEM)
+
+```
+
+## Creating more aesthetic maps with layering and shadowing 
+
+```{r echo=F}
+
+# CREATE SJER DTM MAP
+# import DTM 
+DTM_SJER <- raster("~/Downloads/NEON-DS-Field-Site-Spatial-Data/SJER/DigitalTerrainModel/SJER2013_DTM.tif")
+# import DTM hillshade
+DTM_hill_SJER <- 
+  raster("~/Downloads/NEON-DS-Field-Site-Spatial-Data/SJER/DigitalTerrainModel/SJER2013_DTMHill.tif")
+
+# plot hillshade using a grayscale color ramp that looks like shadows.
+plot(DTM_hill_SJER,
+    col=grey(1:100/100),  #create a color ramp of grey colors
+    legend=F,
+    main="DTM with Hillshade\n NEON SJER Field Site",
+    axes=FALSE)
+
+# add the DSM on top of the hillshade
+plot(DTM_SJER,
+     col=terrain.colors(100),
+     alpha=0.4,
+     add=T,
+     legend=F)
+
+```
+
+# ArcGIS can do better 
+
+## Mapping flood risk 
+
+Follow along [this 4hr tutorial](https://learn.arcgis.com/en/projects/model-bluespots-to-map-flood-risk/) to generate this: 
+
+<a> <img src="https://learn.arcgis.com/cdn/card-catalog/uploads/cards/model-bluespots-to-predict-flood-risk-card.png"> </a>
+
+## Create custom hillshade 
+
+Follow along [this 1hr tutorial](https://learn.arcgis.com/en/projects/illuminate-terrain-with-a-custom-hillshade/) to generate this: 
+
+<a> <img src="https://learn.arcgis.com/en/projects/illuminate-terrain-with-a-custom-hillshade/GUID-3E501A1E-4269-456D-A7E8-547871DB6A29-web.png"> </a>
+
+## Map hurrican storm surges
+
+Follow along [this 0.5hr tutorial](https://learn.arcgis.com/en/projects/map-hurricane-storm-surges/) to generate this: 
+
+<a> <img src="https://learn.arcgis.com/cdn/card-catalog/uploads/cards/map-hurricane-storm-surges.png"> </a>
+
+## Other ArcGIS Pro resources
+
+- Intro to working with raster [here](https://introduction-to-remote-sensing-learngis.hub.arcgis.com/)
+- Find out how to work with rasters and ArcGIS Pro [here](https://learn.arcgis.com/en/gallery/#?q=raster&p=arcgispro)
+
+# More advanced methods on raster data 
+
+## 
+
+- Raster calculations (DSM-DTM)
+- Working with multiband rasters 
+- Working with time-series rasters
+
+
+# ArcGIS Model Builder 
+
+## Why use model builder? 
+
+- repetitive and tedious tasks 
+- reproducibility 
+
+## Automating 
+
+- Writing a program (Classical text-based programming versus visual programming)
+
+##
+> ModelBuilder is a **visual programming language** for building geoprocessing workflows. Geoprocessing models automate and document your spatial analysis and data management processes. You create and modify geoprocessing models in ModelBuilder, where a model is represented as a diagram that chains together sequences of processes and geoprocessing tools, using the output of one process as the input to another process. 
+
+## ModelBuilder in ArcGIS Pro allows you to do the following:
+
+- Build a model by adding and connecting data and tools.
+- Iteratively process every feature class, raster, file, or table in a workspace.
+- Visualize your workflow sequence as an easy-to-understand diagram.
+- Run a model step by step, up to a selected step, or run the entire model.
+- Make your model into a geoprocessing tool that can be shared or can be used in Python scripting and other models.
+
+## 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/help/analysis/geoprocessing/modelbuilder/GUID-D1DDF32B-0BFA-4480-97DB-9CD2D301F56F-web.png" style="width:120%"> </a>
+
+## The model runs the following tools in sequence:
+
+- Select Layer By Attribute—Select the correct vegetation type from a Vegetation map layer.
+- Buffer—Create areas within a distance of 1,500 feet around major roads.
+- Erase—Erase the buffer areas from the selected vegetation areas.
+- Intersect—Overlay the output of the Erase tool with other map layers, including slope, elevation, and climate. This identifies the areas that meet all criteria.
+
+## Model builder vocabulary
+
+Read more info on vocabulary in the [docs](https://pro.arcgis.com/en/pro-app/latest/help/analysis/geoprocessing/modelbuilder/modelbuilder-vocabulary.htm) or follow [quick-tour](https://pro.arcgis.com/en/pro-app/latest/help/analysis/geoprocessing/modelbuilder/modelbuilder-quick-tour.htm) instructions. 
+
+<a> <img src="https://pro.arcgis.com/en/pro-app/latest/help/analysis/geoprocessing/modelbuilder/GUID-69F1672D-A32D-417C-B6BC-0D54A517010B-web.png"> </a>
+
+## Build a model to connect mountain lion habitat 
+
+Follow along the instructions found [here](https://learn.arcgis.com/en/projects/build-a-model-to-connect-mountain-lion-habitat/)
+
+<a> <img src="https://learn.arcgis.com/en/projects/build-a-model-to-connect-mountain-lion-habitat/GUID-4D41AD3A-11E2-427E-8870-71839351F832-web.png"> </a>
+
+# Questions? 🛸

@@ -93,8 +93,8 @@ output:
 
 ## Complete Spatial Randomness 
 
-- Any event has equal probability of occurring in any location, a 1st order effect.
-- The location of one event is independent of the location of another event, a 2nd order effect.
+- Any event has equal probability of occurring in any location, a 1st order effect. Clusters are possible, but they occur due to variation in density. 
+- The location of one event is depends on the location of another event, a 2nd order effect. Interaction.
 
 <a> <img src="https://mgimond.github.io/Spatial/img/IRP_CSR.png" style="width:30%"> </a>
 
